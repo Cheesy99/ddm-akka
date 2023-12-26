@@ -166,35 +166,32 @@ public class DependencyMiner extends AbstractBehavior<DependencyMiner.Message> {
         if (getNeededColumnMessage.getBothColumns) {
             if (getNeededColumnMessage.isString) {
                 this.getContext().getLog().info("Received getNeededColumnMessage from worker {} for task {}!", getNeededColumnMessage.getDependencyWorker(), getNeededColumnMessage.getTaskId());
-                getNeededColumnMessage.
-                        getDependencyWorker().
-                        tell(new DependencyWorker.
+                LargeMessageProxy.LargeMessage dataMessage = new DependencyWorker.
                                 ColumnReceiver(getNeededColumnMessage.getTaskId(), true, columnOfStrings.get(getCompositeKey(getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2()))
                                 , getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2(), columnOfStrings.get(getCompositeKey(getNeededColumnMessage.getKey3(), getNeededColumnMessage.getKey4()))
-                                , getNeededColumnMessage.getKey3(), getNeededColumnMessage.getKey4()));
+                                , getNeededColumnMessage.getKey3(), getNeededColumnMessage.getKey4());
+                this.largeMessageProxy.tell(new LargeMessageProxy.SendMessage(dataMessage, this.dependencyWorkersLargeMessageProxy.get(this.dependencyWorkers.indexOf(getNeededColumnMessage.dependencyWorker))));
             } else {
                 this.getContext().getLog().info("Received getNeededColumnMessage from worker {} for task {}!", getNeededColumnMessage.getDependencyWorker(), getNeededColumnMessage.getTaskId());
-                getNeededColumnMessage.
-                        getDependencyWorker().
-                        tell(new DependencyWorker.
+                LargeMessageProxy.LargeMessage dataMessage = new DependencyWorker.
                                 ColumnReceiver(getNeededColumnMessage.getTaskId(), true, columnOfNumbers.get(getCompositeKey(getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2()))
                                 , getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2(), columnOfNumbers.get(getCompositeKey(getNeededColumnMessage.getKey3(), getNeededColumnMessage.getKey4()))
-                                , getNeededColumnMessage.getKey3(), getNeededColumnMessage.getKey4()));
+                                , getNeededColumnMessage.getKey3(), getNeededColumnMessage.getKey4());
+                this.largeMessageProxy.tell(new LargeMessageProxy.SendMessage(dataMessage, this.dependencyWorkersLargeMessageProxy.get(this.dependencyWorkers.indexOf(getNeededColumnMessage.dependencyWorker))));
             }
         } else if (getNeededColumnMessage.isString) {
             this.getContext().getLog().info("Received getNeededColumnMessage from worker {} for task {}!", getNeededColumnMessage.getDependencyWorker(), getNeededColumnMessage.getTaskId());
-            getNeededColumnMessage.
-                    getDependencyWorker().
-                    tell(new DependencyWorker.
+            LargeMessageProxy.LargeMessage dataMessage = new DependencyWorker.
                             ColumnReceiver(getNeededColumnMessage.getTaskId(), false, columnOfStrings.get(getCompositeKey(getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2()))
-                            , getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2(), null, null, null));
+                            , getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2(), null, null, null);
+            this.largeMessageProxy.tell(new LargeMessageProxy.SendMessage(dataMessage, this.dependencyWorkersLargeMessageProxy.get(this.dependencyWorkers.indexOf(getNeededColumnMessage.dependencyWorker))));
 
         } else {
             this.getContext().getLog().info("Received getNeededColumnMessage from worker {} for task {}!", getNeededColumnMessage.getDependencyWorker(), getNeededColumnMessage.getTaskId());
-            getNeededColumnMessage.getDependencyWorker()
-                    .tell(new DependencyWorker.
+            LargeMessageProxy.LargeMessage dataMessage = new DependencyWorker.
                             ColumnReceiver(getNeededColumnMessage.getTaskId(), false, columnOfNumbers.get(getCompositeKey(getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2()))
-                            , getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2(), null, null, null));
+                            , getNeededColumnMessage.getKey1(), getNeededColumnMessage.getKey2(), null, null, null);
+            this.largeMessageProxy.tell(new LargeMessageProxy.SendMessage(dataMessage, this.dependencyWorkersLargeMessageProxy.get(this.dependencyWorkers.indexOf(getNeededColumnMessage.dependencyWorker))));
         }
         return this;
     }
